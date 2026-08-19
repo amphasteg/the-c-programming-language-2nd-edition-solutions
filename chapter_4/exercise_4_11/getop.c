@@ -90,44 +90,42 @@ double pop(void) {
 }
 
 int getop(char s[]) {
-    int i = 0;
-    int c;
-    static int buf = EOF;
+  int i, c;
+  i = 0;
+  int static buf = EOF;
 
+  // Remove whitespace
+  if ((s[0] = c = buf == EOF ? getchar() : buf) == ' ' || c == '\t') {
+    buf = EOF;
     while ((s[0] = c = getchar()) == ' ' || c == '\t')
-        ;
+      ;
+  }
 
-    s[1] = '\0';
+  buf = EOF;
 
-    if (!isdigit(c) && c != '.' && c != '-') {
-        return c;
-    }
+  s[1] = '\0';
+  if (!isdigit(c) && c != '.' && c != '-')
+    return c; /* not a number */
 
-    if (c == '-') {
-        int next = getchar();
-        if (!isdigit(next) && next != '.') {
-            return next;
-        }
+  if (c == '-') {
+    int next = getchar();
+    if (next == ' ' || next == '\t' || next == '\n') {
+      buf = next;
+      return c; // return op
+    } else if (!isdigit(next) && next != '.')
+      return next; // not a number
+    else
+      s[++i] = c = next;
+  }
 
-        s[i] = c;
-        c = next = buf;
-    } else {
-        c = getchar();
-    }
-
-    if (isdigit(c)) {
-        while (isdigit(s[++i] = c = getchar()))
-            ;
-    }
-
-    if (c == '.') {
-        while (isdigit(s[++i] = c = getchar()))
-            ;
-    }
-
-    if (c != EOF) {
-        buf = c;
-    }
-
-    return NUMBER;
+  if (isdigit(c)) /* collect integer part */
+    while (isdigit(s[++i] = c = buf == EOF ? getchar() : buf))
+      ;
+  if (c == '.') /* collect fraction part */
+    while (isdigit(s[++i] = c = getchar()))
+      ;
+  s[i] = '\0';
+  if (c != EOF)
+    buf = c;
+  return NUMBER;
 }
