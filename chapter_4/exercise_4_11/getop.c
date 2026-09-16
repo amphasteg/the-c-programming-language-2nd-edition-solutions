@@ -12,92 +12,97 @@ void push(double);
 double pop(void);
 
 int main(void) {
-    int type;
-    double op2;
-    char s[MAXOP];
+  int type;
+  double op2;
+  char s[MAXOP];
 
-    while ((type = getop(s)) != EOF) {
-        switch (type) {
-        case NUMBER:
-            push(atof(s));
-            break;
+  while ((type = getop(s)) != EOF) {
+    switch (type) {
+    case NUMBER:
+      push(atof(s));
+      break;
 
-        case '+':
-            push(pop() + pop());
-            break;
+    case '+':
+      push(pop() + pop());
+      break;
 
-        case '-':
-            op2 = pop();
-            push(pop() - op2);
-            break;
+    case '-':
+      op2 = pop();
+      push(pop() - op2);
+      break;
 
-        case '*':
-            push(pop() * pop());
-            break;
+    case '*':
+      push(pop() * pop());
+      break;
 
-        case '/':
-            op2 = pop();
+    case '/':
+      op2 = pop();
 
-            if (op2 != 0.0) {
-                push(pop() / op2);
-            } else {
-                printf("Error: zero divisor.\n");
-            }
+      if (op2 != 0.0) {
+        push(pop() / op2);
+      } else {
+        printf("Error: zero divisor.\n");
+      }
 
-            break;
+      break;
 
-        case '%':
-            op2 = pop();
+    case '%':
+      op2 = pop();
 
-            if (op2 != 0.0) {
-                push((int)pop() % (int)op2);
-            } else {
-                printf("Error: zero divisor.\n");
-            }
-            break;
+      if (op2 != 0.0) {
+        push((int)pop() % (int)op2);
+      } else {
+        printf("Error: zero divisor.\n");
+      }
+      break;
 
-        case '\n':
-            printf("result: %.8g\n", pop());
-            break;
+    case '\n':
+      printf("result: %.8g\n", pop());
+      break;
 
-        default:
-            printf("Error: unknown command %s.\n", s);
-            break;
-        }
+    default:
+      printf("Error: unknown command %s.\n", s);
+      break;
     }
+  }
 
-    return 0;
+  return 0;
 }
 
 int sp = 0;
 double val[MAXVAL];
 
 void push(double f) {
-    if (sp < MAXVAL) {
-        val[sp++] = f;
-    } else {
-        printf("Error: stack full, can't push %g.\n", f);
-    }
+  if (sp < MAXVAL) {
+    val[sp++] = f;
+  } else {
+    printf("Error: stack full, can't push %g.\n",
+           f);
+  }
 }
 
 double pop(void) {
-    if (sp > 0) {
-        return val[--sp];
-    } else {
-        printf("Error: stack empty.\n");
-        return 0.0;
-    }
+  if (sp > 0) {
+    return val[--sp];
+  } else {
+    printf("Error: stack empty.\n");
+    return 0.0;
+  }
 }
 
 int getop(char s[]) {
-  int i, c;
+  int i;
+  int c;
   i = 0;
   int static buf = EOF;
 
   // Remove whitespace
-  if ((s[0] = c = buf == EOF ? getchar() : buf) == ' ' || c == '\t') {
+  if ((s[0] = c = buf == EOF ? getchar() : buf) ==
+          ' ' ||
+      c == '\t') {
     buf = EOF;
-    while ((s[0] = c = getchar()) == ' ' || c == '\t')
+    while ((s[0] = c = getchar()) == ' ' ||
+           c == '\t')
       ;
   }
 
@@ -109,20 +114,26 @@ int getop(char s[]) {
 
   if (c == '-') {
     int next = getchar();
-    if (next == ' ' || next == '\t' || next == '\n') {
+    if (next == ' ' || next == '\t' ||
+        next == '\n') {
       buf = next;
       return c; // return op
-    } else if (!isdigit(next) && next != '.')
-      return next; // not a number
-    else
+    } else if (!isdigit(next) && next != '.') {
+      buf = next;
+      return c; // not a number
+    } else
       s[++i] = c = next;
   }
 
   if (isdigit(c)) /* collect integer part */
-    while (isdigit(s[++i] = c = buf == EOF ? getchar() : buf))
+    while (isdigit(s[++i] = c = buf == EOF
+                                    ? getchar()
+                                    : buf) &&
+           i < BUFFSIZE)
       ;
   if (c == '.') /* collect fraction part */
-    while (isdigit(s[++i] = c = getchar()))
+    while (isdigit(s[++i] = c = getchar()) &&
+           i < BUFFSIZE)
       ;
   s[i] = '\0';
   if (c != EOF)
