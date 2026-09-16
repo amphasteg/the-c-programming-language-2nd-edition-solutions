@@ -114,11 +114,7 @@ int getop(char s[]) {
 
   if (c == '-') {
     int next = getchar();
-    if (next == ' ' || next == '\t' ||
-        next == '\n') {
-      buf = next;
-      return c; // return op
-    } else if (!isdigit(next) && next != '.') {
+    if (!isdigit(next) && next != '.') {
       buf = next;
       return c; // not a number
     } else
@@ -129,11 +125,11 @@ int getop(char s[]) {
     while (isdigit(s[++i] = c = buf == EOF
                                     ? getchar()
                                     : buf) &&
-           i < BUFFSIZE)
+           i < BUFFSIZE - 1)
       ;
   if (c == '.') /* collect fraction part */
     while (isdigit(s[++i] = c = getchar()) &&
-           i < BUFFSIZE)
+           i < BUFFSIZE - 1)
       ;
   s[i] = '\0';
   if (c != EOF)
