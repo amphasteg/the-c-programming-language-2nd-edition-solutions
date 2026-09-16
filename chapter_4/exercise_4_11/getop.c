@@ -125,11 +125,11 @@ int getop(char s[]) {
     while (isdigit(s[++i] = c = buf == EOF
                                     ? getchar()
                                     : buf) &&
-           i < BUFFSIZE - 1)
+           i < MAXOP - 1)
       ;
   if (c == '.') /* collect fraction part */
     while (isdigit(s[++i] = c = getchar()) &&
-           i < BUFFSIZE - 1)
+           i < MAXOP - 1)
       ;
   s[i] = '\0';
   if (c != EOF)
